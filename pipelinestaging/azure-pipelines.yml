@@ -1,0 +1,29 @@
+pool:
+  name: Azure Pipelines
+steps:
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+    displayName: "Install Terraform latest"
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    displayName: "Terraform : azurerm"
+    inputs:
+      workingDirectory: modules
+      backendServiceArm: "devops to az cloud"
+      backendAzureRmResourceGroupName: "mrk-devops-rg"
+      backendAzureRmStorageAccountName: terfbackend
+      backendAzureRmContainerName: tfbackend
+      backendAzureRmKey: az
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    displayName: "Terraform : azurerm"
+    inputs:
+      command: plan
+      workingDirectory: modules
+      environmentServiceNameAzureRM: "devops to az cloud"
+
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    displayName: "Terraform : azurerm"
+    inputs:
+      command: apply
+      workingDirectory: modules
+      environmentServiceNameAzureRM: "devops to az cloud"
